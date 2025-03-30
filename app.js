@@ -23,6 +23,17 @@ function loadPets() {
 function displayPets(pets) {
   const petsContainer = document.getElementById("pets-container");
   petsContainer.innerHTML = "";
+  if(pets.length== 0){
+    petsContainer.innerHTML=`
+    <div class="col-span-full bg-slate-50 p-8  text-center rounded-xl space-y-5">
+      <div>
+        <img class="mx-auto" src="./images/error.webp" alt="">
+      </div>
+      <h4 class="text-xl">No Information Available</h4>
+      <p class="text-xs text-gray-600">It is a long established fact that a reader will be distracted by the readable content of a page when looking at <br>its layout. The point of using Lorem Ipsum is that it has a.</p>
+    </div>`
+    return;
+}
   for (let pet of pets) {
     const petsContainerDiv = document.createElement("div");
     petsContainerDiv.innerHTML = `
