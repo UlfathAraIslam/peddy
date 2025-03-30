@@ -8,22 +8,22 @@ function displayCategories(categories) {
   for (let cat of categories) {
     const categoryDiv = document.createElement("div");
     categoryDiv.innerHTML = `
-        <button class="btn lg:p-10">
+        <button onclick="loadCategoryPets('${cat.category}')" class="btn lg:p-8 hover:bg-[#0E7A8110] hover:rounded-[120px] hover:border-[#0E7A81]">
             <img src="${cat.category_icon}" alt="" class="w-6">
           ${cat.category}</button>
         `;
     categoryContainer.append(categoryDiv);
   }
 }
-function loadAllPets() {
+function loadPets() {
   fetch("https://openapi.programming-hero.com/api/peddy/pets")
     .then((res) => res.json())
-    .then((data) => displayAllPets(data.pets));
+    .then((data) => displayPets(data.pets));
 }
-function displayAllPets(pets) {
+function displayPets(pets) {
   const petsContainer = document.getElementById("pets-container");
+  petsContainer.innerHTML = "";
   for (let pet of pets) {
-    console.log(pet);
     const petsContainerDiv = document.createElement("div");
     petsContainerDiv.innerHTML = `
         <div class="card bg-base-100 shadow-sm">
@@ -48,5 +48,12 @@ function displayAllPets(pets) {
     petsContainer.append(petsContainerDiv);
   }
 }
-loadAllPets();
+const loadCategoryPets=(category)=>{
+const url = `https://openapi.programming-hero.com/api/peddy/category/${category}`
+console.log(url);
+fetch(url)
+.then((res)=>res.json())
+.then((data)=>displayPets(data.data))
+}
+loadPets();
 loadCategories();
