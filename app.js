@@ -8,7 +8,7 @@ function displayCategories(categories) {
   for (let cat of categories) {
     const categoryDiv = document.createElement("div");
     categoryDiv.innerHTML = `
-        <button onclick="loadCategoryPets('${cat.category}')" class="btn lg:p-8 hover:bg-[#0E7A8110] hover:rounded-[120px] hover:border-[#0E7A81]">
+        <button id="btn-${cat.category}" onclick="loadCategoryPets('${cat.category}')" class="btn lg:p-8 hover:bg-[#0E7A8110] hover:rounded-[120px] hover:border-[#0E7A81]">
             <img src="${cat.category_icon}" alt="" class="w-6">
           ${cat.category}</button>
         `;
@@ -61,10 +61,20 @@ function displayPets(pets) {
 }
 const loadCategoryPets=(category)=>{
 const url = `https://openapi.programming-hero.com/api/peddy/category/${category}`
-console.log(url);
 fetch(url)
 .then((res)=>res.json())
-.then((data)=>displayPets(data.data))
+.then((data)=>{
+    removeActiveClass();
+    const clickedButton = document.getElementById(`btn-${category}`);
+    clickedButton.classList.add("active");
+    displayPets(data.data)
+})
+}
+const removeActiveClass=()=>{
+    const activeButtons = document.getElementsByClassName("active");
+    for(let btn of activeButtons){
+        btn.classList.remove("active")
+    }
 }
 loadPets();
 loadCategories();
