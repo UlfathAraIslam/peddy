@@ -23,24 +23,77 @@ function loadPets() {
 function displayPets(pets) {
   const petsContainer = document.getElementById("pets-container");
   petsContainer.innerHTML = "";
-  if(pets.length== 0){
-    petsContainer.innerHTML=`
+  if (pets.length == 0) {
+    petsContainer.innerHTML = `
     <div class="col-span-full bg-slate-50 p-8  text-center rounded-xl space-y-5">
       <div>
         <img class="mx-auto" src="./images/error.webp" alt="">
       </div>
       <h4 class="text-xl">No Information Available</h4>
       <p class="text-xs text-gray-600">It is a long established fact that a reader will be distracted by the readable content of a page when looking at <br>its layout. The point of using Lorem Ipsum is that it has a.</p>
-    </div>`
+    </div>`;
     return;
-}
+  }
   for (let pet of pets) {
     const petsContainerDiv = document.createElement("div");
     petsContainerDiv.innerHTML = `
         <div class="card bg-base-100 shadow-sm">
           <img class="w-[250px] p-5" src="${pet.image}" alt="">
           <div class="card-body">
-            <h5>Breed: ${pet.breed}</h5>
+            <h5 class="text-xl font-bold">${pet.pet_name}</h5>
+          <p class="flex items-center gap-2 text-gray-600">
+            <i class="fas fa-dna"></i> Breed: ${pet.breed}
+          </p>
+
+          <p class="flex items-center gap-2 text-gray-600"><i class="fas fa-calendar-alt"></i>birth ${new Date(
+            pet.date_of_birth
+          ).getFullYear()}</p>
+          <p class="flex items-center gap-2 text-gray-600"><i class="fas fa-venus-mars"></i> </i>Gender:${
+            pet.gender
+          }</p>
+          <p class="flex items-center gap-2 text-gray-600"><i class="fas fa-dollar-sign"></i>${
+            pet.price
+          }$</p>
+          <hr class="text-gray-500">
+          <div class="flex justify-between gap-1">
+            <button class="btn btn-xs lg:btn-lg btn-outline text-gray-500"><i class="fas fa-thumbs-up"></i></button>
+             <button class="btn btn-xs lg:btn-lg btn-outline text-[#0E7A81]">Adopt</button>
+            <button onclick=loadPetDetails(${
+              pet.petId
+            }) class="btn btn-xs lg:btn-lg btn-outline text-[#0E7A81]">Details</button>
+          </div>
+          </div>
+        </div>`;
+    petsContainer.append(petsContainerDiv);
+  }
+}
+const loadCategoryPets = (category) => {
+  const url = `https://openapi.programming-hero.com/api/peddy/category/${category}`;
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+      removeActiveClass();
+      const clickedButton = document.getElementById(`btn-${category}`);
+      clickedButton.classList.add("active");
+      displayPets(data.data);
+    });
+};
+const removeActiveClass = () => {
+  const activeButtons = document.getElementsByClassName("active");
+  for (let btn of activeButtons) {
+    btn.classList.remove("active");
+  }
+};
+const loadPetDetails = (petId) => {
+  const url = `https://openapi.programming-hero.com/api/peddy/pet/${petId}`;
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+      displayPetDetails(data.petData);
+    });
+};
+/*
+ <h5>Breed: ${pet.breed}</h5>
           <p class="flex items-center gap-2 text-gray-600">
             <i class="fas fa-dna"></i> Birth: ${new Date(pet.date_of_birth).getFullYear()}
           </p>
@@ -48,33 +101,48 @@ function displayPets(pets) {
           <p class="flex items-center gap-2 text-gray-600"><i class="fas fa-calendar-alt"></i>birth</p>
           <p class="flex items-center gap-2 text-gray-600"><i class="fas fa-venus-mars"></i> </i>Gender:${pet.gender}</p>
           <p class="flex items-center gap-2 text-gray-600"><i class="fas fa-dollar-sign"></i>${pet.price}$</p>
-          <hr class="text-gray-500">
-          <div class="flex justify-between gap-1">
-            <button class="btn btn-xs lg:btn-lg btn-outline text-gray-500"><i class="fas fa-thumbs-up"></i></button>
-             <button class="btn btn-xs lg:btn-lg btn-outline text-[#0E7A81]">Adopt</button>
-            <button class="btn btn-xs lg:btn-lg btn-outline text-[#0E7A81]">Details</button>
-          </div>
-          </div>
-        </div>`;
-    petsContainer.append(petsContainerDiv);
-  }
-}
-const loadCategoryPets=(category)=>{
-const url = `https://openapi.programming-hero.com/api/peddy/category/${category}`
-fetch(url)
-.then((res)=>res.json())
-.then((data)=>{
-    removeActiveClass();
-    const clickedButton = document.getElementById(`btn-${category}`);
-    clickedButton.classList.add("active");
-    displayPets(data.data)
-})
-}
-const removeActiveClass=()=>{
-    const activeButtons = document.getElementsByClassName("active");
-    for(let btn of activeButtons){
-        btn.classList.remove("active")
-    }
-}
+            <!-- DNA icon -->
+
+          */
+
+const displayPetDetails = (pet) => {
+  document.getElementById("pet_details").showModal();
+  const petDetailsContainer = document.getElementById("details-container");
+  petDetailsContainer.innerHTML = `
+<div class="card bg-base-100">
+  <figure>
+    <img
+      src="${pet.image}"
+      class="w-full" />
+  </figure>
+  <div class="card-body">
+    <h2 class="card-title">${pet.pet_name}</h2>
+        <div class="grid grid-cols-2">
+        <p class="flex items-center gap-2 text-gray-600">
+            <i class="fas fa-dna"></i> Breed: ${pet.breed}
+        </p>
+         <p class="flex items-center gap-2 text-gray-600">
+            <i class="fas fa-calendar-alt"></i> Birth: ${new Date(
+              pet.date_of_birth
+            ).getFullYear()}
+          </p>
+          <p class="flex items-center gap-2 text-gray-600"><i class="fas fa-venus-mars"></i> </i>Gender:${
+            pet.gender
+          }</p>
+          <p class="flex items-center gap-2 text-gray-600"><i class="fas fa-dna"></i>${
+            pet.vaccinated_status
+          }</p>
+          <p class="flex items-center gap-2 text-gray-600"><i class="fas fa-dollar-sign"></i>${
+            pet.price
+          }$</p>
+        </div>
+          <div>
+            <h5 class="font-bold">Details Information</h5>
+            <p class="text-gray-600">${pet.pet_details}</p>
+        </div>
+  </div>
+</div>
+`;
+};
 loadPets();
 loadCategories();
