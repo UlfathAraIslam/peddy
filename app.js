@@ -28,7 +28,7 @@ function loadPets() {
 function displayPets(pets) {
   const petsContainer = document.getElementById("pets-container");
   petsContainer.innerHTML = "";
-  if (pets.length == 0) {
+  if (!Array.isArray(pets) || pets.length == 0) {
     petsContainer.innerHTML = `
     <div class="col-span-full bg-slate-50 p-8  text-center rounded-xl space-y-5">
       <div>
@@ -40,35 +40,33 @@ function displayPets(pets) {
     return;
   }
   for (let pet of pets) {
+    const petImage = pet.image || "./images/default-pet.webp"; // Default image
+    const petName = pet.pet_name || "Unknown Pet";
+    const breed = pet.breed || "Unknown Breed";
+    const birthYear = pet.date_of_birth ? new Date(pet.date_of_birth).getFullYear() : "N/A";
+    const gender = pet.gender || "Not specified";
+    const price = pet.price !== undefined ? `$${pet.price}` : "Price not available";
+    const petId = pet.petId || "unknown";
+
     const petsContainerDiv = document.createElement("div");
     petsContainerDiv.innerHTML = `
         <div class="card bg-base-100 shadow-sm">
-          <img class="w-[250px] p-5" src="${pet.image}" alt="">
+          <img class="w-[250px] p-5" src="${petImage}" alt="Pet Image">
           <div class="card-body">
-            <h5 class="text-xl font-bold">${pet.pet_name}</h5>
-          <p class="flex items-center gap-2 text-gray-600">
-            <i class="fas fa-dna"></i> Breed: ${pet.breed}
-          </p>
-
-          <p class="flex items-center gap-2 text-gray-600"><i class="fas fa-calendar-alt"></i>birth ${new Date(
-            pet.date_of_birth
-          ).getFullYear()}</p>
-          <p class="flex items-center gap-2 text-gray-600"><i class="fas fa-venus-mars"></i> </i>Gender:${
-            pet.gender
-          }</p>
-          <p class="flex items-center gap-2 text-gray-600"><i class="fas fa-dollar-sign"></i>${
-            pet.price
-          }$</p>
-          <hr class="text-gray-500">
-          <div class="flex justify-between gap-1">
-            <button onclick=loadLikedImg(${pet.petId}) class="btn like-btn btn-xs lg:btn-lg btn-outline text-gray-500"><i class="fas fa-thumbs-up"></i></button>
-             <button onclick="handleAdoptButtonClick(this,${pet.petId})"  id="adopt-btn-${pet.petId}" class="btn btn-xs lg:btn-lg btn-outline text-[#0E7A81]">Adopt</button>
-            <button onclick=loadPetDetails(${
-              pet.petId
-            }) class="btn btn-xs lg:btn-lg btn-outline text-[#0E7A81]">Details</button>
-          </div>
+            <h5 class="text-xl font-bold">${petName}</h5>
+            <p class="flex items-center gap-2 text-gray-600"><i class="fas fa-dna"></i> Breed: ${breed}</p>
+            <p class="flex items-center gap-2 text-gray-600"><i class="fas fa-calendar-alt"></i> Birth Year: ${birthYear}</p>
+            <p class="flex items-center gap-2 text-gray-600"><i class="fas fa-venus-mars"></i> Gender: ${gender}</p>
+            <p class="flex items-center gap-2 text-gray-600"><i class="fas fa-dollar-sign"></i> ${price}</p>
+            <hr class="text-gray-500">
+            <div class="flex justify-between gap-1">
+              <button onclick="loadLikedImg('${petId}')" class="btn like-btn btn-xs lg:btn-lg btn-outline text-gray-500"><i class="fas fa-thumbs-up"></i></button>
+              <button onclick="handleAdoptButtonClick(this,'${petId}')" id="adopt-btn-${petId}" class="btn btn-xs lg:btn-lg btn-outline text-[#0E7A81]">Adopt</button>
+              <button onclick="loadPetDetails('${petId}')" class="btn btn-xs lg:btn-lg btn-outline text-[#0E7A81]">Details</button>
+            </div>
           </div>
         </div>`;
+
     petsContainer.append(petsContainerDiv);
     // Add an event listener to the Adopt button
     const adoptButton = document.getElementById(`adopt-btn-${pet.petId}`);
