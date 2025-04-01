@@ -1,3 +1,5 @@
+let pets = [];
+let activeCategoryPets = [];
 function loadCategories() {
   fetch("https://openapi.programming-hero.com/api/peddy/categories")
     .then((res) => res.json())
@@ -18,7 +20,10 @@ function displayCategories(categories) {
 function loadPets() {
   fetch("https://openapi.programming-hero.com/api/peddy/pets")
     .then((res) => res.json())
-    .then((data) => displayPets(data.pets));
+    .then((data) => {
+      pets = data.pets; // Store globally
+      displayPets(pets); // Display initially
+    });
 }
 function displayPets(pets) {
   const petsContainer = document.getElementById("pets-container");
@@ -75,7 +80,8 @@ const loadCategoryPets = (category) => {
       removeActiveClass();
       const clickedButton = document.getElementById(`btn-${category}`);
       clickedButton.classList.add("active");
-      displayPets(data.data);
+      activeCategoryPets = data.data;
+      displayPets(activeCategoryPets);
     });
 };
 const removeActiveClass = () => {
@@ -132,7 +138,6 @@ const displayPetDetails = (pet) => {
 </div>
 `;
 };
-
 const loadLikedImg=(petId)=>{
   const likedPets = [];
     const url = `https://openapi.programming-hero.com/api/peddy/pet/${petId}`;
@@ -153,6 +158,17 @@ const displayLikedPets = (pet) => {
   `
   likedPetsContainer.appendChild(imgElement)
 };
+
+// Sorting function for the button
+document.getElementById("sort-by-price-btn").addEventListener("click", () => {
+  if (activeCategoryPets.length > 0) {
+    activeCategoryPets.sort((a, b) => b.price - a.price); // Sort active category pets
+    displayPets(activeCategoryPets);
+  } else {
+    pets.sort((a, b) => b.price - a.price); // Sort all pets if no category is active
+    displayPets(pets);
+  }
+});
 
 loadPets();
 loadCategories();
