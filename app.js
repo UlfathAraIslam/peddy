@@ -62,7 +62,7 @@ function displayPets(pets) {
           <hr class="text-gray-500">
           <div class="flex justify-between gap-1">
             <button onclick=loadLikedImg(${pet.petId}) class="btn like-btn btn-xs lg:btn-lg btn-outline text-gray-500"><i class="fas fa-thumbs-up"></i></button>
-             <button class="btn btn-xs lg:btn-lg btn-outline text-[#0E7A81]">Adopt</button>
+             <button onclick="handleAdoptButtonClick(this,${pet.petId})"  id="adopt-btn-${pet.petId}" class="btn btn-xs lg:btn-lg btn-outline text-[#0E7A81]">Adopt</button>
             <button onclick=loadPetDetails(${
               pet.petId
             }) class="btn btn-xs lg:btn-lg btn-outline text-[#0E7A81]">Details</button>
@@ -70,6 +70,11 @@ function displayPets(pets) {
           </div>
         </div>`;
     petsContainer.append(petsContainerDiv);
+    // Add an event listener to the Adopt button
+    const adoptButton = document.getElementById(`adopt-btn-${pet.petId}`);
+    adoptButton.addEventListener("click",function(){
+      handleAdoptButtonClick(adoptButton);
+    })
   }
 }
 const loadCategoryPets = (category) => {
@@ -170,5 +175,33 @@ document.getElementById("sort-by-price-btn").addEventListener("click", () => {
   }
 });
 
+function handleAdoptButtonClick(button) {
+  let countdown = 3;
+  button.disabled = true;
+  
+  showModal();
+
+  const countdownText = document.getElementById("countdownText");
+
+  const countdownInterval = setInterval(() => {
+      countdownText.textContent = `${countdown}`;
+      countdown--;
+
+      if (countdown <0) {
+        clearInterval(countdownInterval);
+        closeModal(); 
+        button.textContent = "Adopted";
+        button.classList.add("bg-gray-400", "text-gray-700", "cursor-not-allowed");
+    }
+  }, 1000);
+}
+
+function showModal() {
+  document.getElementById("adoptModal").showModal();
+}
+
+function closeModal() {
+  document.getElementById("adoptModal").close();
+}
 loadPets();
 loadCategories();
