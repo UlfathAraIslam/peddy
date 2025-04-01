@@ -56,7 +56,7 @@ function displayPets(pets) {
           }$</p>
           <hr class="text-gray-500">
           <div class="flex justify-between gap-1">
-            <button class="btn btn-xs lg:btn-lg btn-outline text-gray-500"><i class="fas fa-thumbs-up"></i></button>
+            <button onclick=loadLikedImg(${pet.petId}) class="btn like-btn btn-xs lg:btn-lg btn-outline text-gray-500"><i class="fas fa-thumbs-up"></i></button>
              <button class="btn btn-xs lg:btn-lg btn-outline text-[#0E7A81]">Adopt</button>
             <button onclick=loadPetDetails(${
               pet.petId
@@ -92,18 +92,6 @@ const loadPetDetails = (petId) => {
       displayPetDetails(data.petData);
     });
 };
-/*
- <h5>Breed: ${pet.breed}</h5>
-          <p class="flex items-center gap-2 text-gray-600">
-            <i class="fas fa-dna"></i> Birth: ${new Date(pet.date_of_birth).getFullYear()}
-          </p>
-
-          <p class="flex items-center gap-2 text-gray-600"><i class="fas fa-calendar-alt"></i>birth</p>
-          <p class="flex items-center gap-2 text-gray-600"><i class="fas fa-venus-mars"></i> </i>Gender:${pet.gender}</p>
-          <p class="flex items-center gap-2 text-gray-600"><i class="fas fa-dollar-sign"></i>${pet.price}$</p>
-            <!-- DNA icon -->
-
-          */
 
 const displayPetDetails = (pet) => {
   document.getElementById("pet_details").showModal();
@@ -144,5 +132,27 @@ const displayPetDetails = (pet) => {
 </div>
 `;
 };
+
+const loadLikedImg=(petId)=>{
+  const likedPets = [];
+    const url = `https://openapi.programming-hero.com/api/peddy/pet/${petId}`;
+    fetch(url)
+    .then((res)=>res.json())
+    .then((data)=>{
+      // console.log(data);
+       const pet =  data.petData;
+       likedPets.push(pet)
+       displayLikedPets(pet);
+    })
+}
+const displayLikedPets = (pet) => {
+  const likedPetsContainer = document.getElementById("liked-pets-container");
+  const imgElement = document.createElement("div");
+  imgElement.innerHTML=`
+  <img class="w-full rounded-lg" src="${pet.image}"></img>
+  `
+  likedPetsContainer.appendChild(imgElement)
+};
+
 loadPets();
 loadCategories();
