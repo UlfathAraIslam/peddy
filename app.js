@@ -18,13 +18,16 @@ function displayCategories(categories) {
   }
 }
 function loadPets() {
+  showLoader();
   fetch("https://openapi.programming-hero.com/api/peddy/pets")
     .then((res) => res.json())
     .then((data) => {
-      pets = data.pets; // Store globally
-      displayPets(pets); // Display initially
-    });
+      pets = data.pets;
+      displayPets(pets);
+      hideLoader();
+    })
 }
+
 function displayPets(pets) {
   const petsContainer = document.getElementById("pets-container");
   petsContainer.innerHTML = "";
@@ -76,6 +79,7 @@ function displayPets(pets) {
   }
 }
 const loadCategoryPets = (category) => {
+  showLoader();
   const url = `https://openapi.programming-hero.com/api/peddy/category/${category}`;
   fetch(url)
     .then((res) => res.json())
@@ -85,7 +89,9 @@ const loadCategoryPets = (category) => {
       clickedButton.classList.add("active");
       activeCategoryPets = data.data;
       displayPets(activeCategoryPets);
+      hideLoader();
     });
+
 };
 const removeActiveClass = () => {
   const activeButtons = document.getElementsByClassName("active");
@@ -201,5 +207,14 @@ function showModal() {
 function closeModal() {
   document.getElementById("adoptModal").close();
 }
+const showLoader=()=>{
+  document.getElementById("loading").classList.remove("hidden");
+  document.getElementById("pets-container-full").classList.add("hidden");
+
+}
+const hideLoader = () => {
+  document.getElementById("loading").classList.add("hidden");
+  document.getElementById("pets-container-full").classList.remove("hidden");
+};
 loadPets();
 loadCategories();

@@ -100,20 +100,26 @@
         <h5>Best Deal For you</h5>
         <button id="sort-by-price-btn" class="btn bg-[#0E7A81] text-white">Sort by Price</button>
       </section>
+            <!-- loader -->
+        <section id="loading" class="text-center text-[#0E7A81] py-10 hidden">
+          <span class="loading loading-spinner text-center loading-xl"></span>
+         </section>
       <!-- pets container -->
-      <section class="flex gap-5 mb-20">
+      <section id="pets-container-full" class="flex gap-5 mb-20">
+        
         <div
           id="pets-container"
-          class="grid lg:grid-cols-3 grid-cols-2 gap-5"
+          class="grid lg:grid-cols-3 grid-cols-2 gap-5 border rounded-xl border-gray-100 p-10"
         >
       </div>
         <!-- display liked imgs -->
          <!-- TODO: have to do two column in grid without vertical spacing between each row -->
-        <div id="liked-pets-container" class="flex flex-col gap-2">
+        <div id="liked-pets-container" class="flex flex-col gap-2 border p-10 rounded-xl border-gray-100">
           <h2 class="text-3xl font-bold text-[#0E7A81] text-center">Save your Liked pets</h2>
           <hr class="text-[#0E7A81]">
         </div>
       </section>
+
       <!-- Open the modal using ID.showModal() method -->
       <dialog id="pet_details" class="modal modal-bottom sm:modal-middle">
         <div class="modal-box card bg-base-100 shadow-sm">
