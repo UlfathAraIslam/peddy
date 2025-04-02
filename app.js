@@ -54,7 +54,7 @@ function displayPets(pets) {
     const petsContainerDiv = document.createElement("div");
     petsContainerDiv.innerHTML = `
         <div class="card bg-base-100 shadow-sm">
-          <img class="w-[250px] p-5" src="${petImage}" alt="Pet Image">
+          <img class="w-full p-5" src="${petImage}" alt="Pet Image">
           <div class="card-body">
             <h5 class="text-xl font-bold">${petName}</h5>
             <p class="flex items-center gap-2 text-gray-600"><i class="fas fa-dna"></i> Breed: ${breed}</p>
